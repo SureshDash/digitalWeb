@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: dt-service-pagecrawl
+Implementation-Version: 1.0-SNAPSHOT
+Built-By: Suresh Dash
+Implementation-Vendor-Id: com.page.crawl
+Build-Jdk: 1.8.0_201
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/dt-service-pagecrawl
+Created-By: Maven Integration for Eclipse
+

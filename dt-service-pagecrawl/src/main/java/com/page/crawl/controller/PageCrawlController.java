@@ -35,7 +35,6 @@ public class PageCrawlController {
 	
 	@RequestMapping(value = "/crawl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
 	public ResponseEntity<WSResponseStatus> pageCrawl(@RequestBody AppVO appVO) throws PageCrawlExceptions {
-		List<PagesVO> result = null;
 		WSResponseStatus wsResponseStatus = null;
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		AppVO AppVo;
@@ -45,7 +44,7 @@ public class PageCrawlController {
 			wsResponseStatus = new WSResponseStatus();
 			wsResponseStatus.setStatus(PageCrawlGlobalConstants.SUCCESS);
 			wsResponseStatus.setStatusCode(PageCrawlGlobalConstants.SUCCESS_CODE);
-			wsResponseStatus.setStatusMessage("Machine data  extracted successfully");
+			wsResponseStatus.setStatusMessage("page crawl data  extracted successfully");
 			wsResponseStatus.setCollate(collate);
 			return new ResponseEntity<WSResponseStatus>(wsResponseStatus, headers, HttpStatus.OK);
 		} catch (PageCrawlExceptions e) {

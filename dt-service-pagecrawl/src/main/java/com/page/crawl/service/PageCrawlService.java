@@ -20,25 +20,30 @@ import com.page.crawl.dto.PagesVO;
 public class PageCrawlService {
 	private static final int MYTHREADS = 30;
 
-	public Map<String, Set<String>> processPageCrawl(AppVO appVO) {
+	public Map<String, List<String>> processPageCrawl(AppVO appVO) {
 		Map<String, List<String>> pageMap = new HashMap<>();
 		List<Map<String, Set<String>>> res = new ArrayList<>();
 		Set<String> success = new HashSet<>();
 		Set<String> skipped = new HashSet<>();
 		Set<String> error = new HashSet<>();
-		Map<String, Set<String>> collate = new HashMap<>();
+		Map<String, List<String>> collate = new HashMap<>();
 
 		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);
 
 		for (PagesVO vo : appVO.getPages()) {
 			pageMap.put(vo.getAddress(), vo.getLinks());
-			PageCrawlTask page = new PageCrawlTask(vo, pageMap, success, skipped);
+		}
+
+		for (PagesVO vo : appVO.getPages()) {
+
+			PageCrawlTask page = new PageCrawlTask(vo, pageMap, success, skipped, error);
 			Future<Map<String, Set<String>>> result = executor.submit(page);
 			Map<String, Set<String>> collate1;
 			try {
 				collate1 = result.get();
 				success.addAll(collate1.get("success"));
 				skipped.addAll(collate1.get("skipped"));
+				error.addAll(collate1.get("error"));
 
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
@@ -46,25 +51,23 @@ public class PageCrawlService {
 		}
 		List<String> successList = new ArrayList<String>(success);
 		List<String> skippedList = new ArrayList<String>(skipped);
+		List<String> errorList = new ArrayList<String>(error);
+		collate.put("success", successList);
+		collate.put("skipped", skippedList);
+		collate.put("error", errorList);
 
-		for (String sucss : successList) {
-			if (!pageMap.containsKey(sucss)) {
-				success.remove(sucss);
-				error.add(sucss);
-			}
-		}
-		for (String sucss : skippedList) {
-			if (!pageMap.containsKey(sucss)) {
-				success.remove(sucss);
-				error.add(sucss);
-			}
-		}
-		collate.put("success", success);
-		collate.put("skipped", skipped);
-		collate.put("error", error);
-		collate.entrySet().stream()
-				.forEach(entry -> System.out.println("Key : " + entry.getKey() + "   Value : " + entry.getValue()));
-		;
+		/*
+		 * for (String sucss : successList) { if (!pageMap.containsKey(sucss)) {
+		 * success.remove(sucss); error.add(sucss); } } for (String sucss : skippedList)
+		 * { if (!pageMap.containsKey(sucss)) { skipped.remove(sucss); error.add(sucss);
+		 * } }
+		 */
+		/*
+		 * collate.put("success", success); collate.put("skipped", skipped);
+		 * collate.put("error", error); collate.entrySet().stream() .forEach(entry ->
+		 * System.out.println("Key : " + entry.getKey() + "   Value : " +
+		 * entry.getValue())); ;
+		 */
 
 		return collate;
 	}

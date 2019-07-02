@@ -14,12 +14,15 @@ public class PageCrawlTask implements Callable<Map<String, Set<String>>> {
 	private Map<String, List<String>> pageMap;
 	private Set<String> success;
 	private Set<String> skipped;
+	private Set<String> error;
 
-	public PageCrawlTask(PagesVO pagesVO, Map<String, List<String>> pageMap, Set<String> success, Set<String> skipped) {
+	public PageCrawlTask(PagesVO pagesVO, Map<String, List<String>> pageMap, Set<String> success, Set<String> skipped,
+			Set<String> error) {
 		this.pagesVO = pagesVO;
 		this.pageMap = pageMap;
 		this.success = success;
 		this.skipped = skipped;
+		this.error = error;
 
 	}
 
@@ -27,24 +30,27 @@ public class PageCrawlTask implements Callable<Map<String, Set<String>>> {
 	public Map<String, Set<String>> call() throws Exception {
 		Map<String, Set<String>> collate = new HashMap<>();
 		System.out.println(pagesVO.getAddress() + "--" + pagesVO.getLinks());
-		for (String s : pagesVO.getLinks()) {
-			if (pageMap.containsKey(s)) {
-				List<String> compare = pageMap.get(s);
-				if (success.contains(s)) {
-					skipped.add(s);
-				} else // if (!compare.contains(s))
-				{
-					success.add(s);
+		success.add("page-01");// its deault page
+		for (String page : pagesVO.getLinks()) {
+			if (pageMap.containsKey(page)) {
+				if (success.contains(pagesVO.getAddress())) {
+					if (!success.contains(page)) {
+						success.add(page);
+					} else {
+						skipped.add(page);
+					}
 				}
 			} else {
-				success.add(s);
+				if (error.contains(page)) {
+					skipped.add(page);
+				}
+				error.add(page);
 			}
 
 		}
-
 		collate.put("success", success);
 		collate.put("skipped", skipped);
-// collate.put("error", error);
+		collate.put("error", error);
 		return collate;
 	}
 }

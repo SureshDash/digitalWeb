@@ -1,6 +1,7 @@
 package com.page.crawl.dto;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ public class WSResponseStatus implements Serializable{
 	private String status;
 	private String statusCode;
 	private String statusMessage;
-	private Map<String,Set<String>> collate;
+	private Map<String,List<String>> collate;
 	public String getStatus() {
 		return status;
 	}
@@ -28,10 +29,10 @@ public class WSResponseStatus implements Serializable{
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
-	public Map<String, Set<String>> getCollate() {
+	public Map<String, List<String>> getCollate() {
 		return collate;
 	}
-	public void setCollate(Map<String, Set<String>> collate) {
+	public void setCollate(Map<String, List<String>> collate) {
 		this.collate = collate;
 	}
 

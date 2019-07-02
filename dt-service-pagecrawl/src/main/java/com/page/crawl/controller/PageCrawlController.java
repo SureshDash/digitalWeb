@@ -39,7 +39,7 @@ public class PageCrawlController {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		AppVO AppVo;
 		try {
-			Map<String, Set<String>> collate = pageCrawlService.processPageCrawl(appVO);
+			Map<String, List<String>> collate = pageCrawlService.processPageCrawl(appVO);
 
 			wsResponseStatus = new WSResponseStatus();
 			wsResponseStatus.setStatus(PageCrawlGlobalConstants.SUCCESS);

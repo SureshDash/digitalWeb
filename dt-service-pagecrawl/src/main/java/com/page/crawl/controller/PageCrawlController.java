@@ -32,15 +32,17 @@ public class PageCrawlController {
 	@Autowired
 	PageCrawlService pageCrawlService;
 
-	
 	@RequestMapping(value = "/crawl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
 	public ResponseEntity<WSResponseStatus> pageCrawl(@RequestBody AppVO appVO) throws PageCrawlExceptions {
 		WSResponseStatus wsResponseStatus = null;
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		AppVO AppVo;
+		Map<String, List<String>> collate = null;
+		// AppVO AppVo;
 		try {
-			Map<String, List<String>> collate = pageCrawlService.processPageCrawl(appVO);
-
+			pageCrawlService = new PageCrawlService();
+			if(null!=appVO) {
+			 collate = pageCrawlService.processPageCrawl(appVO);
+			}  else throw new Exception("APP VO is null"); 
 			wsResponseStatus = new WSResponseStatus();
 			wsResponseStatus.setStatus(PageCrawlGlobalConstants.SUCCESS);
 			wsResponseStatus.setStatusCode(PageCrawlGlobalConstants.SUCCESS_CODE);

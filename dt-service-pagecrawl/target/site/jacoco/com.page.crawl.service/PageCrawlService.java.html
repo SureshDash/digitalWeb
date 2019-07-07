@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PageCrawlService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">dt-service-pagecrawl</a> &gt; <a href="index.source.html" class="el_package">com.page.crawl.service</a> &gt; <span class="el_source">PageCrawlService.java</span></div><h1>PageCrawlService.java</h1><pre class="source lang-java linenums">package com.page.crawl.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.springframework.stereotype.Service;
+
+import com.page.crawl.dto.AppVO;
+import com.page.crawl.dto.PagesVO;
+
+@Service
+<span class="fc" id="L20">public class PageCrawlService {</span>
+	private static final int MYTHREADS = 30;
+
+	public Map&lt;String, List&lt;String&gt;&gt; processPageCrawl(AppVO appVO) {
+<span class="fc" id="L24">		Map&lt;String, List&lt;String&gt;&gt; pageMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L25">		List&lt;Map&lt;String, Set&lt;String&gt;&gt;&gt; res = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L26">		Set&lt;String&gt; success = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L27">		Set&lt;String&gt; skipped = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L28">		Set&lt;String&gt; error = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L29">		Map&lt;String, List&lt;String&gt;&gt; collate = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L31">		ExecutorService executor = Executors.newFixedThreadPool(MYTHREADS);</span>
+
+<span class="fc bfc" id="L33" title="All 2 branches covered.">		for (PagesVO vo : appVO.getPages()) {</span>
+<span class="fc" id="L34">			pageMap.put(vo.getAddress(), vo.getLinks());</span>
+<span class="fc" id="L35">		}</span>
+
+<span class="fc bfc" id="L37" title="All 2 branches covered.">		for (PagesVO vo : appVO.getPages()) {</span>
+
+<span class="fc" id="L39">			PageCrawlTask page = new PageCrawlTask(vo, pageMap, success, skipped, error);</span>
+<span class="fc" id="L40">			Future&lt;Map&lt;String, Set&lt;String&gt;&gt;&gt; result = executor.submit(page);</span>
+			Map&lt;String, Set&lt;String&gt;&gt; collate1;
+			try {
+<span class="fc" id="L43">				collate1 = result.get();</span>
+<span class="fc" id="L44">				success.addAll(collate1.get(&quot;success&quot;));</span>
+<span class="fc" id="L45">				skipped.addAll(collate1.get(&quot;skipped&quot;));</span>
+<span class="fc" id="L46">				error.addAll(collate1.get(&quot;error&quot;));</span>
+
+<span class="nc" id="L48">			} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L49">				e.printStackTrace();</span>
+<span class="fc" id="L50">			}</span>
+<span class="fc" id="L51">		}</span>
+<span class="fc" id="L52">		List&lt;String&gt; successList = new ArrayList&lt;String&gt;(success);</span>
+<span class="fc" id="L53">		List&lt;String&gt; skippedList = new ArrayList&lt;String&gt;(skipped);</span>
+<span class="fc" id="L54">		List&lt;String&gt; errorList = new ArrayList&lt;String&gt;(error);</span>
+<span class="fc" id="L55">		collate.put(&quot;success&quot;, successList);</span>
+<span class="fc" id="L56">		collate.put(&quot;skipped&quot;, skippedList);</span>
+<span class="fc" id="L57">		collate.put(&quot;error&quot;, errorList);</span>
+
+		/*
+		 * for (String sucss : successList) { if (!pageMap.containsKey(sucss)) {
+		 * success.remove(sucss); error.add(sucss); } } for (String sucss : skippedList)
+		 * { if (!pageMap.containsKey(sucss)) { skipped.remove(sucss); error.add(sucss);
+		 * } }
+		 */
+		/*
+		 * collate.put(&quot;success&quot;, success); collate.put(&quot;skipped&quot;, skipped);
+		 * collate.put(&quot;error&quot;, error); collate.entrySet().stream() .forEach(entry -&gt;
+		 * System.out.println(&quot;Key : &quot; + entry.getKey() + &quot;   Value : &quot; +
+		 * entry.getValue())); ;
+		 */
+
+<span class="fc" id="L72">		return collate;</span>
+	}
+
+	/*
+	 * public Map&lt;String, Set&lt;String&gt;&gt; processPageCrawl1(AppVO appVO) { Map&lt;String,
+	 * List&lt;String&gt;&gt; pageMap = new HashMap&lt;&gt;(); Set&lt;String&gt; success = new
+	 * HashSet&lt;&gt;(); Set&lt;String&gt; skipped = new HashSet&lt;&gt;(); Set&lt;String&gt; error = new
+	 * HashSet&lt;&gt;(); Map&lt;String, Set&lt;String&gt;&gt; collate = new HashMap&lt;&gt;();
+	 * 
+	 * for (PagesVO vo : appVO.getPages()) { System.out.println(vo.getAddress() +
+	 * &quot;--&quot; + vo.getLinks()); if (null == pageMap || pageMap.isEmpty()) {
+	 * pageMap.put(vo.getAddress(), vo.getLinks()); for (String s : vo.getLinks()) {
+	 * success.add(s); }
+	 * 
+	 * } else { pageMap.put(vo.getAddress(), vo.getLinks()); for (String s :
+	 * vo.getLinks()) { if (pageMap.containsKey(s)) { List&lt;String&gt; compare =
+	 * pageMap.get(s); if (compare.contains(vo.getAddress())) { skipped.add(s); }
+	 * else if (!compare.contains(vo.getAddress())) { success.add(s); } } else {
+	 * success.add(s); } } } } // using for-each loop for iteration over
+	 * Map.entrySet() List&lt;String&gt; successList = new ArrayList&lt;String&gt;(success);
+	 * List&lt;String&gt; skippedList = new ArrayList&lt;String&gt;(skipped);
+	 * 
+	 * for (String sucss : successList) { if (!pageMap.containsKey(sucss)) {
+	 * success.remove(sucss); error.add(sucss); } } for (String sucss : skippedList)
+	 * { if (!pageMap.containsKey(sucss)) { success.remove(sucss); error.add(sucss);
+	 * } } collate.put(&quot;success&quot;, success); collate.put(&quot;skipped&quot;, skipped);
+	 * collate.put(&quot;error&quot;, error);
+	 * 
+	 * return collate;
+	 * 
+	 * }
+	 */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -72,58 +72,33 @@ public class PageCrawlService {
 		return collate;
 	}
 
-	public Map<String, Set<String>> processPageCrawl1(AppVO appVO) {
-		Map<String, List<String>> pageMap = new HashMap<>();
-		Set<String> success = new HashSet<>();
-		Set<String> skipped = new HashSet<>();
-		Set<String> error = new HashSet<>();
-		Map<String, Set<String>> collate = new HashMap<>();
-
-		for (PagesVO vo : appVO.getPages()) {
-			System.out.println(vo.getAddress() + "--" + vo.getLinks());
-			if (null == pageMap || pageMap.isEmpty()) {
-				pageMap.put(vo.getAddress(), vo.getLinks());
-				for (String s : vo.getLinks()) {
-					success.add(s);
-				}
-
-			} else {
-				pageMap.put(vo.getAddress(), vo.getLinks());
-				for (String s : vo.getLinks()) {
-					if (pageMap.containsKey(s)) {
-						List<String> compare = pageMap.get(s);
-						if (compare.contains(vo.getAddress())) {
-							skipped.add(s);
-						} else if (!compare.contains(vo.getAddress())) {
-							success.add(s);
-						}
-					} else {
-						success.add(s);
-					}
-				}
-			}
-		}
-		// using for-each loop for iteration over Map.entrySet()
-		List<String> successList = new ArrayList<String>(success);
-		List<String> skippedList = new ArrayList<String>(skipped);
-
-		for (String sucss : successList) {
-			if (!pageMap.containsKey(sucss)) {
-				success.remove(sucss);
-				error.add(sucss);
-			}
-		}
-		for (String sucss : skippedList) {
-			if (!pageMap.containsKey(sucss)) {
-				success.remove(sucss);
-				error.add(sucss);
-			}
-		}
-		collate.put("success", success);
-		collate.put("skipped", skipped);
-		collate.put("error", error);
-
-		return collate;
-
-	}
+	/*
+	 * public Map<String, Set<String>> processPageCrawl1(AppVO appVO) { Map<String,
+	 * List<String>> pageMap = new HashMap<>(); Set<String> success = new
+	 * HashSet<>(); Set<String> skipped = new HashSet<>(); Set<String> error = new
+	 * HashSet<>(); Map<String, Set<String>> collate = new HashMap<>();
+	 * 
+	 * for (PagesVO vo : appVO.getPages()) { System.out.println(vo.getAddress() +
+	 * "--" + vo.getLinks()); if (null == pageMap || pageMap.isEmpty()) {
+	 * pageMap.put(vo.getAddress(), vo.getLinks()); for (String s : vo.getLinks()) {
+	 * success.add(s); }
+	 * 
+	 * } else { pageMap.put(vo.getAddress(), vo.getLinks()); for (String s :
+	 * vo.getLinks()) { if (pageMap.containsKey(s)) { List<String> compare =
+	 * pageMap.get(s); if (compare.contains(vo.getAddress())) { skipped.add(s); }
+	 * else if (!compare.contains(vo.getAddress())) { success.add(s); } } else {
+	 * success.add(s); } } } } // using for-each loop for iteration over
+	 * Map.entrySet() List<String> successList = new ArrayList<String>(success);
+	 * List<String> skippedList = new ArrayList<String>(skipped);
+	 * 
+	 * for (String sucss : successList) { if (!pageMap.containsKey(sucss)) {
+	 * success.remove(sucss); error.add(sucss); } } for (String sucss : skippedList)
+	 * { if (!pageMap.containsKey(sucss)) { success.remove(sucss); error.add(sucss);
+	 * } } collate.put("success", success); collate.put("skipped", skipped);
+	 * collate.put("error", error);
+	 * 
+	 * return collate;
+	 * 
+	 * }
+	 */
 }

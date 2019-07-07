@@ -1,0 +1,9 @@
+com\page\crawl\dto\WSResponseStatus.class
+com\page\crawl\service\PageCrawlService.class
+com\page\crawl\controller\PageCrawlController.class
+com\page\crawl\dto\AppVO.class
+com\page\crawl\dto\PagesVO.class
+com\page\crawl\api\PageCrawlApplication.class
+com\page\crawl\service\PageCrawlTask.class
+com\page\crawl\constants\PageCrawlGlobalConstants.class
+com\page\crawl\exceptions\PageCrawlExceptions.class

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WSResponseStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">dt-service-pagecrawl</a> &gt; <a href="index.source.html" class="el_package">com.page.crawl.dto</a> &gt; <span class="el_source">WSResponseStatus.java</span></div><h1>WSResponseStatus.java</h1><pre class="source lang-java linenums">package com.page.crawl.dto;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+<span class="nc" id="L8">public class WSResponseStatus implements Serializable{</span>
+	private static final long serialVersionUID=1L;
+	private String status;
+	private String statusCode;
+	private String statusMessage;
+	private Map&lt;String,List&lt;String&gt;&gt; collate;
+	public String getStatus() {
+<span class="nc" id="L15">		return status;</span>
+	}
+	public void setStatus(String status) {
+<span class="nc" id="L18">		this.status = status;</span>
+<span class="nc" id="L19">	}</span>
+	public String getStatusCode() {
+<span class="nc" id="L21">		return statusCode;</span>
+	}
+	public void setStatusCode(String statusCode) {
+<span class="nc" id="L24">		this.statusCode = statusCode;</span>
+<span class="nc" id="L25">	}</span>
+	public String getStatusMessage() {
+<span class="nc" id="L27">		return statusMessage;</span>
+	}
+	public void setStatusMessage(String statusMessage) {
+<span class="nc" id="L30">		this.statusMessage = statusMessage;</span>
+<span class="nc" id="L31">	}</span>
+	public Map&lt;String, List&lt;String&gt;&gt; getCollate() {
+<span class="nc" id="L33">		return collate;</span>
+	}
+	public void setCollate(Map&lt;String, List&lt;String&gt;&gt; collate) {
+<span class="nc" id="L36">		this.collate = collate;</span>
+<span class="nc" id="L37">	}</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
